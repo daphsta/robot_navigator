@@ -2,8 +2,14 @@ require "minitest/autorun"
 require_relative "read_input"
 
 class RobotTest < Minitest::Test
-  def test_initial_place_not_out_of_grid
+  def test_validate_out_of_grid
     robot = Robot.new(6,5,"NORTH")
+    robot.validate
+    assert_equal(false,robot.valid?)
+  end
+
+  def test_validate_negative_coordinate
+    robot = Robot.new(-6,-5,"NORTH")
     robot.validate
     assert_equal(false,robot.valid?)
   end
@@ -61,4 +67,5 @@ class RobotTest < Minitest::Test
     assert_equal("EAST",robot.current_direction)
     assert_equal(5,robot.current_position.y)
   end
+
 end
