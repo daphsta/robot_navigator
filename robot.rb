@@ -1,20 +1,25 @@
 require_relative 'point'
 
 class Robot
-  attr_reader :current_position, :current_direction, :grid_size
+  attr_reader :current_position, :current_direction, :grid_size, :valid
 
   def initialize(point_x, point_y, current_direction)
     @current_position = Point.new(point_x, point_y)
     @current_direction = current_direction
     @grid_size = Point.new(5, 5)
+    @valid = true
+  end
+
+  def validate
+    if (current_position.x > grid_size.x || current_position.y > grid_size.y) || (current_position.x < 0 || current_position.y < 0)
+      @valid = false
+    else
+      @valid = true
+    end
   end
 
   def valid?
-    if current_position.x > grid_size.x || current_position.y > grid_size.y
-      false
-    else
-      true
-    end
+    @valid
   end
 
   def rotate_right
