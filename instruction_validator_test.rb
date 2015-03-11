@@ -27,14 +27,14 @@ class InstructionValidatorTest < Minitest::Test
   def test_empty_string_after_PLACE_instruction
     dummy_class = DummyClass.new
     empty_string_instruction = ""
-    result = dummy_class.valid_place_instruction?(empty_string_instruction)
+    result = dummy_class.valid_coordinates?(empty_string_instruction)
     assert_equal(false,result)
   end
 
   def test_space_after_PLACE_instruction
     dummy_class = DummyClass.new
     empty_string_instruction = "  "
-    result = dummy_class.valid_place_instruction?(empty_string_instruction)
+    result = dummy_class.valid_coordinates?(empty_string_instruction)
     assert_equal(false,result)
   end
 end
