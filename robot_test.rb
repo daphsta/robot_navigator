@@ -4,14 +4,15 @@ require_relative "read_input"
 class RobotTest < Minitest::Test
   def test_initial_place_not_out_of_grid
     robot = Robot.new(6,5,"NORTH")
-    assert_equal(robot.valid?,false)
+    robot.validate
+    assert_equal(false,robot.valid?)
   end
 
   def test_ignore_instructions_if_out_of_grid
     robot = Robot.new(5,5,"NORTH")
     robot.move_forward
-    assert_equal(robot.current_position.x,5)
-    assert_equal(robot.current_position.y,5)
+    assert_equal(5,robot.current_position.x)
+    assert_equal(5,robot.current_position.y)
   end
 
   def test_robot_initial_position_read
@@ -23,9 +24,9 @@ class RobotTest < Minitest::Test
                     REPORT"
     nav = instruction.split("\n")
     result = ReadInput.robot_position(nav[0])
-    assert_equal(result.current_position.x, 1)
-    assert_equal(result.current_position.y, 2)
-    assert_equal(result.current_direction, "EAST")
+    assert_equal(1,result.current_position.x)
+    assert_equal(2,result.current_position.y)
+    assert_equal("EAST",result.current_direction)
   end
 
   def test_robot_movements
@@ -35,8 +36,8 @@ class RobotTest < Minitest::Test
     (1..nav.size).each do |inst|
       ReadInput.navigate(nav[inst],robot)
     end
-    assert_equal(robot.current_direction, "NORTH")
-    assert_equal(robot.current_position.x, 3)
+    assert_equal("NORTH",robot.current_direction)
+    assert_equal(3,robot.current_position.x)
   end
 
   def test_should_not_go_out_of_x_plane
@@ -46,8 +47,8 @@ class RobotTest < Minitest::Test
     (1..nav.size).each do |inst|
       ReadInput.navigate(nav[inst],robot)
     end
-    assert_equal(robot.current_direction, "NORTH")
-    assert_equal(robot.current_position.x, 0)
+    assert_equal("NORTH",robot.current_direction)
+    assert_equal(0,robot.current_position.x)
   end
 
   def test_should_not_go_out_of_y_plane
@@ -57,7 +58,7 @@ class RobotTest < Minitest::Test
     (1..nav.size).each do |inst|
       ReadInput.navigate(nav[inst],robot)
     end
-    assert_equal(robot.current_direction, "EAST")
-    assert_equal(robot.current_position.y, 5)
+    assert_equal("EAST",robot.current_direction)
+    assert_equal(5,robot.current_position.y)
   end
 end
