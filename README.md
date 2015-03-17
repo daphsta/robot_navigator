@@ -18,5 +18,6 @@
 2. Run the code by executing the command
  ```ruby -r "./read_input.rb" -e "ReadInput.instruction_from_file"
  ```
+ 
 3. Two test files, **instruction_validator_test.rb** and **robot_test.rb** are included
 

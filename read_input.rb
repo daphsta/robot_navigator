@@ -7,34 +7,38 @@ class ReadInput
   class << self
     def instruction_from_file
       begin
-        file = File.new("input.txt", "r")
-
-        while (instruction = file.gets)
-          if instruction.include?("PLACE")
-            if valid_coordinates?(instruction) == false
-              instruction = file.gets
-            else
-              robot = robot_position(instruction)
-              break
-            end
-          end
+        instructions = File.read("input.txt",).split("\n")
+        robot = Robot.new
+        instructions.each do |instruction|
+          robot.run(instruction)
         end
 
-        unless robot.nil?
-          while (instruction = file.gets)
-            if instruction.include?("PLACE")
-              if valid_coordinates?(instruction) == false
-                instruction = file.gets
-              else
-                robot = robot_position(instruction)
-              end
-            end
-            robot.validate
-            puts "Output: Position out of grid" unless robot.valid?
-            navigate(instruction.chomp, robot) if %w(move left right).any? { |str| instruction.downcase.include? str }
-            report(robot) if instruction.chomp == "REPORT"
-          end
-        end
+        # while (instruction = file.gets)
+        #   if instruction.include?("PLACE")
+        #     if valid_coordinates?(instruction) == false
+        #       instruction = file.gets
+        #     else
+        #       robot = robot_position(instruction)
+        #       break
+        #     end
+        #   end
+        # end
+        #
+        # unless robot.nil?
+        #   while (instruction = file.gets)
+        #     if instruction.include?("PLACE")
+        #       if valid_coordinates?(instruction) == false
+        #         instruction = file.gets
+        #       else
+        #         robot = robot_position(instruction)
+        #       end
+        #     end
+        #     robot.validate
+        #     puts "Output: Position out of grid" unless robot.valid?
+        #     navigate(instruction.chomp, robot) if %w(move left right).any? { |str| instruction.downcase.include? str }
+        #     report(robot) if instruction.chomp == "REPORT"
+        #   end
+        # end
 
         file.close
       rescue => e

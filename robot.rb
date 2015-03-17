@@ -1,14 +1,21 @@
 require_relative 'point'
+require_relative 'factories/instruction_factory'
 
 class Robot
-  attr_reader :current_position, :current_direction, :grid_size, :valid
+  attr_reader :current_position, :current_direction, :grid_size, :valid, :point_x, :point_y
 
-  def initialize(point_x, point_y, current_direction)
+  def initialize
     @current_position = Point.new(point_x, point_y)
     @current_direction = current_direction
     @grid_size = Point.new(5, 5)
     @valid = true
   end
+
+  def run(instruction)
+    type_instruction = find_instruction_type(instruction)
+
+  end
+
 
   def validate
     if (current_position.x > grid_size.x || current_position.y > grid_size.y) || (current_position.x < 0 || current_position.y < 0)
@@ -62,6 +69,10 @@ class Robot
   end
 
   private
+
+  def find_instruction_type(instruction)
+    InstructionFactory.build_instruction(instruction)
+  end
 
   def increment_y
     if current_position.y < grid_size.y
