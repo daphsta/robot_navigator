@@ -17,8 +17,8 @@
 1. Ensure that a file with the name **input.txt** is in the same directory
 2. Run the code by executing the command
 
- ```ruby -r "./read_input.rb" -e "ReadInput.instruction_from_file"
+ ```ruby
+  ruby -r "./read_input.rb" -e "ReadInput.instruction_from_file"
  ```
-
 3. Two test files, **instruction_validator_test.rb** and **robot_test.rb** are included
 
