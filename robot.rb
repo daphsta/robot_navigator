@@ -2,7 +2,7 @@ require_relative 'point'
 require_relative 'navigate_robot'
 
 class Robot
-  attr_accessor :current_position, :current_direction, :grid_size, :valid
+  attr_accessor :current_position, :current_direction, :grid_size
 
   NAVIGATION_TYPE = {
     move:  -> (robot) { NavigateRobot.new(robot).move_forward },
