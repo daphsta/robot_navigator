@@ -6,43 +6,20 @@ class ReadInput
   class << self
     def instruction_from_file
       begin
-        instructions = File.read("input.txt",).split("\n")
+        #Stdin while stdin get as string
+        #pipe in
+        #object send method_missing
+        #robot.send(instruction.to_sym)
 
-        instructions.each do |instruction|
-          instruction_type = find_instruction_type(instruction)
-
-          if instruction_type.type.nil?
-            next
-          else
-            move_robot(instruction_type, instruction)
-          end
+        robot = Robot.new
+        while(instruction = STDIN.gets)
+          inst = instruction.split(' ')
+          robot.send(inst[0].downcase.to_sym,inst[1])
         end
 
       rescue => e
         puts e.message
       end
-    end
-
-
-    private
-
-    def move_robot(instruction_type, instruction)
-      if instruction_type.type == :place
-        coordinate = instruction.split(' ')
-        point_x    = coordinate[1].split(',')[0]
-        point_y    = coordinate[1].split(',')[1]
-        direction  = coordinate[1].split(',')[2]
-
-        @bot = Robot.new(point_x.to_i, point_y.to_i, direction)
-      elsif instruction_type.type == :report
-        @bot.report
-      else
-        @bot.run(instruction)
-      end
-    end
-
-    def find_instruction_type(instruction)
-      InstructionFactory.build_instruction(instruction)
     end
 
   end

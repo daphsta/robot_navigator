@@ -10,17 +10,37 @@ class Robot
     right: -> (robot) { NavigateRobot.new(robot).rotate_right }
   }
 
-  def initialize(point_x, point_y, current_direction)
-    @current_position  = Point.new(point_x, point_y)
-    @current_direction = current_direction
-    @grid_size         = Point.new(5, 5)
+  def initialize
+    @grid_size = Point.new(5, 5)
   end
 
-  def run(instruction)
+
+  def place(*args)
+    self.current_position   = Point.new
+
+    coordinate              = args[0].split(',')
+    self.current_position.x = coordinate[0].to_i
+    self.current_position.y = coordinate[1].to_i
+    self.current_direction  = coordinate[2]
+  end
+
+  def move(*args)
     validate
-    if valid?
-      NAVIGATION_TYPE[instruction.downcase.to_sym].call(self)
-    end
+    NAVIGATION_TYPE[:move].call(self) if valid?
+  end
+
+  def left(*args)
+    validate
+    NAVIGATION_TYPE[:left].call(self) if valid?
+  end
+
+  def right(*args)
+    validate
+    NAVIGATION_TYPE[:right].call(self) if valid?
+  end
+
+  def method_missing *args
+    puts 'method missing'
   end
 
   def report
