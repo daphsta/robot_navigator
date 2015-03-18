@@ -23,6 +23,9 @@ class ReadInput
       end
     end
 
+
+    private
+
     def move_robot(instruction_type, instruction)
       if instruction_type.type == :place
         coordinate = instruction.split(' ')
@@ -37,8 +40,6 @@ class ReadInput
         @bot.run(instruction)
       end
     end
-
-    private
 
     def find_instruction_type(instruction)
       InstructionFactory.build_instruction(instruction)
