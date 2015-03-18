@@ -1,70 +1,48 @@
 require_relative 'robot'
-require_relative 'instruction_validator'
+require_relative 'factories/instruction_factory'
 
 class ReadInput
-  extend InstructionValidator
 
   class << self
     def instruction_from_file
       begin
         instructions = File.read("input.txt",).split("\n")
-        robot = Robot.new
+
         instructions.each do |instruction|
-          robot.run(instruction)
+          instruction_type = find_instruction_type(instruction)
+
+          if instruction_type.type.nil?
+            next
+          else
+            move_robot(instruction_type, instruction)
+          end
         end
 
-        # while (instruction = file.gets)
-        #   if instruction.include?("PLACE")
-        #     if valid_coordinates?(instruction) == false
-        #       instruction = file.gets
-        #     else
-        #       robot = robot_position(instruction)
-        #       break
-        #     end
-        #   end
-        # end
-        #
-        # unless robot.nil?
-        #   while (instruction = file.gets)
-        #     if instruction.include?("PLACE")
-        #       if valid_coordinates?(instruction) == false
-        #         instruction = file.gets
-        #       else
-        #         robot = robot_position(instruction)
-        #       end
-        #     end
-        #     robot.validate
-        #     puts "Output: Position out of grid" unless robot.valid?
-        #     navigate(instruction.chomp, robot) if %w(move left right).any? { |str| instruction.downcase.include? str }
-        #     report(robot) if instruction.chomp == "REPORT"
-        #   end
-        # end
-
-        file.close
       rescue => e
         puts e.message
       end
     end
 
-    def robot_position(instruction)
-      instruction.slice!("PLACE")
-      coordinates = instruction.lstrip!.split(',')
-      Robot.new(coordinates[0].to_i, coordinates[1].to_i, coordinates[2].chomp)
-    end
+    def move_robot(instruction_type, instruction)
+      if instruction_type.type == :place
+        coordinate = instruction.split(' ')
+        point_x    = coordinate[1].split(',')[0]
+        point_y    = coordinate[1].split(',')[1]
+        direction  = coordinate[1].split(',')[2]
 
-    def navigate(instruction, robot)
-      case instruction
-        when "MOVE"
-          robot.move_forward
-        when "LEFT"
-          robot.rotate_left
-        when "RIGHT"
-          robot.rotate_right
+        @bot = Robot.new(point_x.to_i, point_y.to_i, direction)
+      elsif instruction_type.type == :report
+        @bot.report
+      else
+        @bot.run(instruction)
       end
     end
 
-    def report(robot)
-      puts "Output: #{robot.current_position.x}, #{robot.current_position.y} #{robot.current_direction}"
+    private
+
+    def find_instruction_type(instruction)
+      InstructionFactory.build_instruction(instruction)
     end
+
   end
 end

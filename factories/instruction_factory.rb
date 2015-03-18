@@ -1,16 +1,16 @@
-
 Instruction = Struct.new(:type, :instruction)
 
 class InstructionFactory
   InstructionTypes = {
-    place: -> (instruction) { instruction.include?("PLACE") },
-    move:  -> (instruction) { instruction.eql?("MOVE") },
-    left:  -> (instruction) { instruction.eql?("LEFT") },
-    right: -> (instruction) { instruction.eql?("RIGHT") }
+    place:  -> (instruction) { instruction.include?("PLACE") },
+    move:   -> (instruction) { instruction.eql?("MOVE") },
+    left:   -> (instruction) { instruction.eql?("LEFT") },
+    right:  -> (instruction) { instruction.eql?("RIGHT") },
+    report: -> (instruction) { instruction.eql?("REPORT") }
   }
 
   def self.build_instruction(inst)
-    Instruction.new(type_of_instruction(inst),inst)
+    Instruction.new(type_of_instruction(inst), inst)
   end
 
   def self.type_of_instruction(inst)

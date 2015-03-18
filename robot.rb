@@ -1,21 +1,34 @@
 require_relative 'point'
-require_relative 'factories/instruction_factory'
+require_relative 'navigate_robot'
 
 class Robot
-  attr_reader :current_position, :current_direction, :grid_size, :valid, :point_x, :point_y
+  attr_accessor :current_position, :current_direction, :grid_size, :valid
 
-  def initialize
-    @current_position = Point.new(point_x, point_y)
+  NAVIGATION_TYPE = {
+    move:  -> (robot) { NavigateRobot.new(robot).move_forward },
+    left:  -> (robot) { NavigateRobot.new(robot).rotate_left },
+    right: -> (robot) { NavigateRobot.new(robot).rotate_right }
+  }
+
+  def initialize(point_x, point_y, current_direction)
+    @current_position  = Point.new(point_x, point_y)
     @current_direction = current_direction
-    @grid_size = Point.new(5, 5)
-    @valid = true
+    @grid_size         = Point.new(5, 5)
   end
 
   def run(instruction)
-    type_instruction = find_instruction_type(instruction)
-
+    validate
+    if valid?
+      NAVIGATION_TYPE[instruction.downcase.to_sym].call(self)
+    end
   end
 
+  def report
+    puts "Output: #{self.current_position.x}, #{self.current_position.y} #{self.current_direction}"
+  end
+
+
+  private
 
   def validate
     if (current_position.x > grid_size.x || current_position.y > grid_size.y) || (current_position.x < 0 || current_position.y < 0)
@@ -27,83 +40,6 @@ class Robot
 
   def valid?
     @valid
-  end
-
-  def rotate_right
-    case current_direction
-      when "NORTH"
-        @current_direction = "EAST"
-      when "SOUTH"
-        @current_direction = "WEST"
-      when "EAST"
-        @current_direction = "SOUTH"
-      when "WEST"
-        @current_direction = "NORTH"
-    end
-  end
-
-  def rotate_left
-    case current_direction
-      when "NORTH"
-        @current_direction = "WEST"
-      when "SOUTH"
-        @current_direction = "EAST"
-      when "EAST"
-        @current_direction = "NORTH"
-      when "WEST"
-        @current_direction = "SOUTH"
-    end
-  end
-
-  def move_forward
-    case current_direction
-      when "NORTH"
-        increment_y
-      when "SOUTH"
-        decrement_y
-      when "EAST"
-        increment_x
-      when "WEST"
-        decrement_x
-    end
-  end
-
-  private
-
-  def find_instruction_type(instruction)
-    InstructionFactory.build_instruction(instruction)
-  end
-
-  def increment_y
-    if current_position.y < grid_size.y
-      @current_position.y += 1
-    else
-      @current_position
-    end
-  end
-
-  def decrement_y
-    if (current_position.y < grid_size.y) && current_position.y > 0
-      @current_position.y -= 1
-    else
-      @current_position
-    end
-  end
-
-  def increment_x
-    if current_position.x < grid_size.x
-      @current_position.x += 1
-    else
-      @current_position
-    end
-  end
-
-  def decrement_x
-    if (current_position.x < grid_size.x) && current_position.x >0
-      @current_position.x -= 1
-    else
-      @current_position
-    end
   end
 
 end
