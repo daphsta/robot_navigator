@@ -1,22 +1,26 @@
 require_relative 'point'
-require_relative 'navigate_robot'
 
 class Robot
-  attr_accessor :current_position, :current_direction, :grid_size
+  attr_accessor :current_position, :current_direction, :grid_x, :grid_y
 
-  NAVIGATION_TYPE = {
-    move:  -> (robot) { NavigateRobot.new(robot).move_forward },
-    left:  -> (robot) { NavigateRobot.new(robot).rotate_left },
-    right: -> (robot) { NavigateRobot.new(robot).rotate_right }
+  COMPASS = ["NORTH", "EAST", "SOUTH", "WEST"]
+
+  MOVE = {
+    north: -> (robot) { robot.send(:increment_y) },
+    south: -> (robot) { robot.send(:decrement_y) },
+    east:  -> (robot) { robot.send(:increment_x) },
+    west:  -> (robot) { robot.send(:decrement_x) }
   }
 
   def initialize
-    @grid_size = Point.new(5, 5)
+    @grid_x      = 5
+    @grid_y      = 5
+    @gridx_array = Array.new(grid_x) { |i| i }
+    @gridy_array = Array.new(grid_y) { |i| i }
   end
 
-
   def place(*args)
-    self.current_position   = Point.new
+    self.current_position = Point.new
 
     coordinate              = args[0].split(',')
     self.current_position.x = coordinate[0].to_i
@@ -26,24 +30,24 @@ class Robot
 
   def move(*args)
     validate
-    NAVIGATION_TYPE[:move].call(self) if valid?
+    MOVE[self.current_direction.downcase.to_sym].call(self) if valid?
   end
 
   def left(*args)
     validate
-    NAVIGATION_TYPE[:left].call(self) if valid?
+    rotate_left
   end
 
   def right(*args)
     validate
-    NAVIGATION_TYPE[:right].call(self) if valid?
+    rotate_right
   end
 
   def method_missing *args
-    puts 'method missing'
+    puts 'invalid instruction'
   end
 
-  def report
+  def report(*args)
     puts "Output: #{self.current_position.x}, #{self.current_position.y} #{self.current_direction}"
   end
 
@@ -51,7 +55,7 @@ class Robot
   private
 
   def validate
-    if (current_position.x > grid_size.x || current_position.y > grid_size.y) || (current_position.x < 0 || current_position.y < 0)
+    if (current_position.x > grid_x || current_position.y > grid_y) || (current_position.x < 0 || current_position.y < 0)
       @valid = false
     else
       @valid = true
@@ -62,4 +66,53 @@ class Robot
     @valid
   end
 
+  def rotate_left
+    COMPASS.each_with_index do |direction, index|
+      if self.current_direction == direction
+        COMPASS.rotate!(-1)
+        return self.current_direction = COMPASS[index]
+      end
+    end
+  end
+
+  def rotate_right
+    COMPASS.each_with_index do |direction, index|
+      if self.current_direction == direction
+        COMPASS.rotate!(1)
+        return self.current_direction = COMPASS[index]
+      end
+    end
+  end
+
+  def increment_y
+    @gridy_array.each do |point|
+      if (self.current_position.y + 1) == point
+        return self.current_position.y += 1
+      end
+    end
+  end
+
+  def decrement_y
+    @gridy_array.each do |point|
+      if (self.current_position.y - 1) == point
+        return self.current_position.y -= 1
+      end
+    end
+  end
+
+  def increment_x
+    @gridx_array.each do |point|
+      if (self.current_position.x + 1) == point
+        return self.current_position.x += 1
+      end
+    end
+  end
+
+  def decrement_x
+    @gridx_array.each do |point|
+      if (self.current_position.x - 1) == point
+        return self.current_position.x -= 1
+      end
+    end
+  end
 end

@@ -5,6 +5,9 @@ class NavigateRobot
     @robot = robot
   end
 
+  #compass object
+  #data structure
+  #array of directions
   def rotate_right
     case robot.current_direction
       when "NORTH"
