@@ -15,10 +15,16 @@
 ###Instructions to run code
 
 1. Ensure that a file with the name **input.txt** is in the same directory
-2. Run the code by executing the command
+2. Run the code by executing the command to read from STDIN
 
  ```ruby
   ruby -r "./read_input.rb" -e "ReadInput.instruction_from_file"
  ```
+ or from **input.txt**
+
+ ```ruby
+  cat input.txt | ruby -r "./read_input.rb" -e "ReadInput.instruction_from_file"
+```
+
 3. Test file, **robot_test.rb** is included
 

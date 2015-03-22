@@ -2,6 +2,7 @@ require_relative 'point'
 
 class Robot
   attr_accessor :current_position, :current_direction, :grid_x, :grid_y
+  attr_reader :valid
 
   COMPASS = ["NORTH", "EAST", "SOUTH", "WEST"]
 
@@ -13,16 +14,16 @@ class Robot
   }
 
   def initialize
-    @grid_x      = 5
-    @grid_y      = 5
+    @grid_x      = 6
+    @grid_y      = 6
     @gridx_array = Array.new(grid_x) { |i| i }
     @gridy_array = Array.new(grid_y) { |i| i }
   end
 
-  def place(*args)
-    self.current_position = Point.new
-
-    coordinate              = args[0].split(',')
+  def place(args)
+    self.current_position   = Point.new
+    coordinate              = args.split(',')
+    @valid                  = false if (coordinate[0] =~ /\d/).nil?
     self.current_position.x = coordinate[0].to_i
     self.current_position.y = coordinate[1].to_i
     self.current_direction  = coordinate[2]
@@ -34,32 +35,29 @@ class Robot
   end
 
   def left(*args)
-    validate
     rotate_left
   end
 
   def right(*args)
-    validate
     rotate_right
   end
 
-  def method_missing *args
-    puts 'invalid instruction'
+  def method_missing(*args)
+    puts 'Invalid instruction'
   end
 
   def report(*args)
-    puts "Output: #{self.current_position.x}, #{self.current_position.y} #{self.current_direction}"
+    validate
+    puts "Output: #{self.current_position.x}, #{self.current_position.y} #{self.current_direction}" if valid?
+    puts 'Invalid position' unless valid?
   end
 
 
   private
 
   def validate
-    if (current_position.x > grid_x || current_position.y > grid_y) || (current_position.x < 0 || current_position.y < 0)
-      @valid = false
-    else
-      @valid = true
-    end
+    @valid = false
+    return @valid = true if  @gridy_array.include?(current_position.y) || @gridx_array.include?(current_position.x)
   end
 
   def valid?

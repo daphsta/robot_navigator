@@ -15,7 +15,7 @@ REPORT
 adsfad
 adfadf
 PLACE 6,6,EAST
-invalid
+LEFT
 garbage
 PLACE 1,5,NORTH
 MOVE
