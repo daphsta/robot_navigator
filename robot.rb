@@ -24,7 +24,7 @@ class Robot
   def place(args)
     self.current_position   = Point.new
     coordinate              = args.split(',')
-    @valid                  = false if (coordinate[0] =~ /\d/).nil?
+
     self.current_position.x = coordinate[0].to_i
     self.current_position.y = coordinate[1].to_i
     self.current_direction  = coordinate[2]
@@ -58,6 +58,7 @@ class Robot
 
   def validate
     @valid = false
+    return @valid = false if current_direction.nil?
     return @valid = true if (@gridy_array.include?(current_position.y) && @gridx_array.include?(current_position.x))
   end
 
