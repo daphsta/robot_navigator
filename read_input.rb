@@ -5,7 +5,8 @@ class ReadInput
   class << self
     def instruction_from_file
       begin
-        robot = Robot.new
+        robot = Robot.new(6,6)
+
         while(instruction = STDIN.gets)
           inst = instruction.split(' ')
           robot.send(inst[0].downcase.to_sym,inst[1])

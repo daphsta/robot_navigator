@@ -1,8 +1,8 @@
 require_relative 'point'
 
 class Robot
-  attr_accessor :current_position, :current_direction, :grid_x, :grid_y
-  attr_reader :valid
+  attr_accessor :current_position, :current_direction
+  attr_reader :valid, :grid_x, :grid_y
 
   COMPASS = ["NORTH", "EAST", "SOUTH", "WEST"]
 
@@ -13,12 +13,13 @@ class Robot
     west:  -> (robot) { robot.send(:decrement_x) }
   }
 
-  def initialize
-    @grid_x      = 6
-    @grid_y      = 6
+  def initialize(grid_x,grid_y)
+    @grid_x      = grid_x
+    @grid_y      = grid_y
     @gridx_array = Array.new(grid_x) { |i| i }
     @gridy_array = Array.new(grid_y) { |i| i }
   end
+
 
   def place(args)
     self.current_position   = Point.new
@@ -57,7 +58,7 @@ class Robot
 
   def validate
     @valid = false
-    return @valid = true if  @gridy_array.include?(current_position.y) || @gridx_array.include?(current_position.x)
+    return @valid = true if (@gridy_array.include?(current_position.y) && @gridx_array.include?(current_position.x))
   end
 
   def valid?
